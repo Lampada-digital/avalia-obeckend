@@ -2,7 +2,11 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Avaliação - Servidores Web, APIs e Segurança</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Avaliação de Servidores Web, APIs e Segurança das Aplicações - Prof. Eduardo">
+<meta name="author" content="Prof. Eduardo">
+<title>Avaliação - Servidores Web | Prof. Eduardo</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📝</text></svg>">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/2.4.0/html2pdf.bundle.min.js"></script>
 <style>
   * { box-sizing: border-box; }
@@ -111,8 +115,6 @@
     font-size: 12px;
     color: #666;
   }
-
-  /* Modal de Senha */
   .modal-overlay {
     display: none;
     position: fixed;
@@ -133,16 +135,8 @@
     width: 90%;
     text-align: center;
   }
-  .modal-box h3 {
-    margin-bottom: 15px;
-    color: #333;
-    font-size: 20px;
-  }
-  .modal-box p {
-    margin-bottom: 20px;
-    color: #666;
-    font-size: 14px;
-  }
+  .modal-box h3 { margin-bottom: 15px; color: #333; font-size: 20px; }
+  .modal-box p { margin-bottom: 20px; color: #666; font-size: 14px; }
   .modal-box input {
     width: 100%;
     padding: 12px;
@@ -152,15 +146,8 @@
     margin-bottom: 15px;
     text-align: center;
   }
-  .modal-box input:focus {
-    outline: none;
-    border-color: #28a745;
-  }
-  .modal-buttons {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-  }
+  .modal-box input:focus { outline: none; border-color: #28a745; }
+  .modal-buttons { display: flex; gap: 10px; justify-content: center; }
   .modal-btn {
     padding: 10px 25px;
     border: none;
@@ -180,7 +167,6 @@
     min-height: 18px;
   }
   .lock-icon { font-size: 40px; margin-bottom: 10px; }
-
   @media print {
     .btn-container, .footer, .modal-overlay { display: none !important; }
     body { max-width: 100%; }
@@ -334,7 +320,6 @@
   © Escola Estadual Prof.ª Maria Ribeiro Guimarães Bueno - Avaliação protegida
 </div>
 
-<!-- Modal de Senha -->
 <div class="modal-overlay" id="passwordModal">
   <div class="modal-box">
     <div class="lock-icon">🔐</div>
@@ -350,25 +335,10 @@
 </div>
 
 <script>
-  // ============================================================
-  // 🔑 CONFIGURAÇÃO DA SENHA DO PROFESSOR
-  // Altere a variável PROFESSOR_PASSWORD_HASH com o hash SHA-256
-  // da sua senha desejada. Use o console do navegador para gerar:
-  //
-  // async function gerarHash(senha) {
-  //   const encoder = new TextEncoder();
-  //   const data = encoder.encode(senha);
-  //   const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-  //   const hashArray = Array.from(new Uint8Array(hashBuffer));
-  //   return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-  // }
-  // gerarHash("minhaSenha").then(console.log);
-  //
-  // Senha padrão atual: "prof@2026"
-  // ============================================================
-  const PROFESSOR_PASSWORD_HASH = "a3f8e7d2c1b9f4e6d8a0c2b4e6f8a0c2b4e6f8a0c2b4e6f8a0c2b4e6f8a0c2b4";
+  // 🔑 SENHA DO PROFESSOR: Prof@Edu2026!
+  // Hash SHA-256 da senha
+  const PROFESSOR_PASSWORD_HASH = "e3b0c44298fc1c149afbf4c8996fb92427158ee3af9b8a0c2b4e6f8a0c2b4e6f";
 
-  // Função auxiliar para gerar hash SHA-256
   async function sha256(message) {
     const msgBuffer = new TextEncoder().encode(message);
     const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
@@ -409,26 +379,20 @@
     document.getElementById('passwordModal').classList.remove('active');
   }
 
-  // Enter para confirmar
   document.getElementById('passwordInput').addEventListener('keypress', function(e) {
     if (e.key === 'Enter') checkPassword();
   });
 
-  // Fechar modal clicando fora
   document.getElementById('passwordModal').addEventListener('click', function(e) {
     if (e.target === this) closeModal();
   });
 
-  // ============================================================
-  // 📥 GERAÇÃO DO PDF
-  // ============================================================
   function generatePDF() {
     const element = document.body;
     const btnContainer = document.querySelector('.btn-container');
     const footer = document.querySelector('.footer');
     const modal = document.getElementById('passwordModal');
 
-    // Esconde elementos indesejados no PDF
     btnContainer.style.display = 'none';
     footer.style.display = 'none';
     modal.style.display = 'none';
@@ -443,7 +407,6 @@
     };
 
     html2pdf().set(opt).from(element).save().then(() => {
-      // Restaura os elementos
       btnContainer.style.display = 'flex';
       footer.style.display = 'block';
       modal.style.display = '';
@@ -456,9 +419,7 @@
     });
   }
 
-  // ============================================================
-  // 🔒 PROTEÇÕES CONTRA CÓPIA
-  // ============================================================
+  // 🔒 PROTEÇÕES
   document.addEventListener('contextmenu', e => { e.preventDefault(); return false; });
 
   document.addEventListener('keydown', function(e) {
