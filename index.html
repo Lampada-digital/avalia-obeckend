@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Avaliação de Servidores Web, APIs e Segurança das Aplicações - Prof. Eduardo">
+<meta name="author" content="Prof. Eduardo">
+<title>Avaliação - Servidores Web | Prof. Eduardo</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📝</text></svg>">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/2.4.0/html2pdf.bundle.min.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Times New Roman', Times, serif;
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    color: #000;
+    line-height: 1.5;
+  }
+  h1, h2, h3 { text-align: center; }
+  h1 { font-size: 20px; margin-bottom: 5px; }
+  h2 { font-size: 18px; margin: 10px 0; }
+  h3 { font-size: 16px; margin: 20px 0 10px; text-align: left; }
+  .header-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 2px solid #000;
+    margin-bottom: 20px;
+  }
+  .header-table td {
+    border: 1px solid #000;
+    padding: 6px 10px;
+    vertical-align: middle;
+  }
+  .header-table input {
+    border: none;
+    border-bottom: 1px dotted #000;
+    font-family: inherit;
+    font-size: 14px;
+    width: 100%;
+    padding: 2px;
+    background: transparent;
+  }
+  .instructions {
+    background: #f5f5f5;
+    border: 1px solid #000;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-style: italic;
+    text-align: center;
+  }
+  .question {
+    margin: 25px 0;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: #fafafa;
+  }
+  .question-title { font-weight: bold; margin-bottom: 10px; font-size: 15px; }
+  .question-text { margin-bottom: 12px; }
+  .options label {
+    display: block;
+    padding: 6px 10px;
+    margin: 4px 0;
+    cursor: pointer;
+    border-radius: 3px;
+  }
+  .options label:hover { background: #e8f0fe; }
+  .options input[type="radio"] { margin-right: 8px; cursor: pointer; }
+  .vf-group { display: flex; flex-direction: column; gap: 8px; }
+  .vf-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 6px;
+    border-bottom: 1px dashed #ccc;
+  }
+  .vf-item:last-child { border-bottom: none; }
+  .vf-item span { flex: 1; }
+  .vf-item .vf-options { display: flex; gap: 15px; white-space: nowrap; }
+  textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    border: 1px solid #000;
+    resize: vertical;
+  }
+  .btn-container {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin: 30px auto;
+    flex-wrap: wrap;
+  }
+  .btn {
+    padding: 12px 30px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+  }
+  .print-btn { background: #0066cc; }
+  .print-btn:hover { background: #004c99; }
+  .download-btn { background: #28a745; }
+  .download-btn:hover { background: #1e7e34; }
+  .footer {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 12px;
+    color: #666;
+  }
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal-box {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+  }
+  .modal-box h3 { margin-bottom: 15px; color: #333; font-size: 20px; }
+  .modal-box p { margin-bottom: 20px; color: #666; font-size: 14px; }
+  .modal-box input {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+  .modal-box input:focus { outline: none; border-color: #28a745; }
+  .modal-buttons { display: flex; gap: 10px; justify-content: center; }
+  .modal-btn {
+    padding: 10px 25px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  .modal-btn.confirm { background: #28a745; color: white; }
+  .modal-btn.cancel { background: #dc3545; color: white; }
+  .modal-btn:hover { opacity: 0.9; }
+  .error-msg {
+    color: #dc3545;
+    font-size: 13px;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    min-height: 18px;
+  }
+  .lock-icon { font-size: 40px; margin-bottom: 10px; }
+  @media print {
+    .btn-container, .footer, .modal-overlay { display: none !important; }
+    body { max-width: 100%; }
+    .question { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Avaliação de Higiene Ocupacional</h1>
+<h2>Escola Estadual Prof.ª Maria Ribeiro Guimarães Bueno</h2>
+
+<table class="header-table">
+  <tr>
+    <td><strong>Curso:</strong> Desenvolvimento de Sistemas</td>
+    <td><strong>Módulo/Série:</strong> 3T</td>
+  </tr>
+  <tr>
+    <td><strong>Componente Curricular:</strong> Servidores Web, APIs e Segurança das Aplicações</td>
+    <td><strong>Professor(a):</strong> Eduardo</td>
+  </tr>
+  <tr>
+    <td><strong>Data:</strong> <input type="date" id="data"></td>
+    <td><strong>Menção:</strong> <input type="text" id="mencao" placeholder="____"></td>
+  </tr>
+  <tr><td colspan="2"><strong>Aluno(a) 1:</strong> <input type="text" id="aluno1"></td></tr>
+  <tr><td colspan="2"><strong>Aluno(a) 2:</strong> <input type="text" id="aluno2"></td></tr>
+  <tr><td colspan="2"><strong>Aluno(a) 3:</strong> <input type="text" id="aluno3"></td></tr>
+</table>
+
+<div class="instructions">
+  <strong>Instruções:</strong> Escrever de caneta azul ou preta, não rasurar a prova, cada questão terá o valor de 1,0 ponto.
+</div>
+
+<h2>AVALIAÇÃO</h2>
+
+<div class="question">
+  <div class="question-title">1. (Múltipla escolha) - 1,0 ponto</div>
+  <div class="question-text">Um servidor web recebe uma solicitação feita por um navegador e precisa disponibilizar o recurso solicitado ao cliente. Qual alternativa descreve corretamente esse funcionamento?</div>
+  <div class="options">
+    <label><input type="radio" name="q1" value="A"> A) O cliente envia uma solicitação, o servidor processa a requisição e envia uma resposta.</label>
+    <label><input type="radio" name="q1" value="B"> B) O servidor envia uma solicitação ao navegador e aguarda que o usuário responda.</label>
+    <label><input type="radio" name="q1" value="C"> C) O navegador instala automaticamente um servidor no computador do usuário.</label>
+    <label><input type="radio" name="q1" value="D"> D) O servidor apenas armazena arquivos e não participa do processamento de requisições.</label>
+  </div>
+</div>
+
+<div class="question">
+  <div class="question-title">2. (Múltipla escolha) - 1,0 ponto</div>
+  <div class="question-text">Uma equipe está escolhendo uma tecnologia para hospedar uma aplicação que poderá receber uma grande quantidade de acessos. De acordo com o material estudado, qual servidor é associado a alta performance e escalabilidade, especialmente em servidores com alta carga?</div>
+  <div class="options">
+    <label><input type="radio" name="q2" value="A"> A) Apache</label>
+    <label><input type="radio" name="q2" value="B"> B) Nginx</label>
+    <label><input type="radio" name="q2" value="C"> C) MySQL</label>
+    <label><input type="radio" name="q2" value="D"> D) PHP</label>
+  </div>
+</div>
+
+<div class="question">
+  <div class="question-title">3. (Múltipla escolha) - 1,0 ponto</div>
+  <div class="question-text">Durante a configuração de um servidor Linux, um desenvolvedor precisa instalar o Apache. Qual sequência de comandos apresentada no material corresponde à instalação básica?</div>
+  <div class="options">
+    <label><input type="radio" name="q3" value="A"> A) <code>sudo apt update</code> e <code>sudo apt install apache2</code></label>
+    <label><input type="radio" name="q3" value="B"> B) <code>sudo install apache</code> e <code>sudo start apache</code></label>
+    <label><input type="radio" name="q3" value="C"> C) <code>sudo apt apache2</code> e <code>sudo update server</code></label>
+    <label><input type="radio" name="q3" value="D"> D) <code>apt remove apache2</code> e <code>sudo install nginx</code></label>
+  </div>
+</div>
+
+<div class="question">
+  <div class="question-title">4. (Verdadeiro ou Falso) - 1,0 ponto</div>
+  <div class="question-text">Analise as afirmativas sobre servidores web e marque V para verdadeiro ou F para falso.</div>
+  <div class="vf-group">
+    <div class="vf-item"><span>( ) Um servidor web responde a solicitações HTTP feitas por navegadores ou outros clientes.</span>
+      <div class="vf-options"><label><input type="radio" name="q4a" value="V"> V</label><label><input type="radio" name="q4a" value="F"> F</label></div></div>
+    <div class="vf-item"><span>( ) O processo básico envolve uma solicitação (request), o processamento pelo servidor e uma resposta (response).</span>
+      <div class="vf-options"><label><input type="radio" name="q4b" value="V"> V</label><label><input type="radio" name="q4b" value="F"> F</label></div></div>
+    <div class="vf-item"><span>( ) A resposta de um servidor pode conter dados no formato JSON.</span>
+      <div class="vf-options"><label><input type="radio" name="q4c" value="V"> V</label><label><input type="radio" name="q4c" value="F"> F</label></div></div>
+    <div class="vf-item"><span>( ) Um servidor web não pode disponibilizar arquivos ao cliente.</span>
+      <div class="vf-options"><label><input type="radio" name="q4d" value="V"> V</label><label><input type="radio" name="q4d" value="F"> F</label></div></div>
+  </div>
+</div>
+
+<div class="question">
+  <div class="question-title">5. (Múltipla escolha) - 1,0 ponto</div>
+  <div class="question-text">Uma aplicação web será publicada em um servidor e a equipe deseja permitir comunicação por HTTP e HTTPS. Quais portas devem ser consideradas na configuração do firewall, conforme o material?</div>
+  <div class="options">
+    <label><input type="radio" name="q5" value="A"> A) 21 e 22</label>
+    <label><input type="radio" name="q5" value="B"> B) 25 e 53</label>
+    <label><input type="radio" name="q5" value="C"> C) 80 e 443</label>
+    <label><input type="radio" name="q5" value="D"> D) 3000 e 8080</label>
+  </div>
+</div>
+
+<div class="question">
+  <div class="question-title">6. (Múltipla escolha) - 1,0 ponto</div>
+  <div class="question-text">Uma empresa deseja proteger os dados transmitidos entre seus clientes e o servidor. Qual recurso de segurança é indicado no material para proteger essa comunicação?</div>
+  <div class="options">
+    <label><input type="radio" name="q6" value="A"> A) Certificado SSL</label>
+    <label><input type="radio" name="q6" value="B"> B) Arquivo HTML</label>
+    <label><input type="radio" name="q6" value="C"> C) Banco de dados local</label>
+    <label><input type="radio" name="q6" value="D"> D) Servidor de arquivos</label>
+  </div>
+</div>
+
+<div class="question">
+  <div class="question-title">7. (Verdadeiro ou Falso) - 1,0 ponto</div>
+  <div class="question-text">Sobre a configuração e segurança de servidores, analise as afirmativas:</div>
+  <div class="vf-group">
+    <div class="vf-item"><span>( ) O firewall pode ser configurado para permitir as portas 80 e 443.</span>
+      <div class="vf-options"><label><input type="radio" name="q7a" value="V"> V</label><label><input type="radio" name="q7a" value="F"> F</label></div></div>
+    <div class="vf-item"><span>( ) O Let's Encrypt pode ser utilizado na instalação de certificados de segurança.</span>
+      <div class="vf-options"><label><input type="radio" name="q7b" value="V"> V</label><label><input type="radio" name="q7b" value="F"> F</label></div></div>
+    <div class="vf-item"><span>( ) O Nginx pode ser configurado para direcionar tráfego para uma aplicação Node.js.</span>
+      <div class="vf-options"><label><input type="radio" name="q7c" value="V"> V</label><label><input type="radio" name="q7c" value="F"> F</label></div></div>
+    <div class="vf-item"><span>( ) A segurança do servidor é independente da proteção dos dados transmitidos entre cliente e servidor.</span>
+      <div class="vf-options"><label><input type="radio" name="q7d" value="V"> V</label><label><input type="radio" name="q7d" value="F"> F</label></div></div>
+  </div>
+</div>
+
+<div class="question">
+  <div class="question-title">8. (Múltipla escolha) - 1,0 ponto</div>
+  <div class="question-text">Uma aplicação Node.js está executando localmente na porta 3000. A equipe utiliza Nginx para receber as requisições externas e encaminhá-las para a aplicação. No exemplo estudado, qual diretiva realiza esse encaminhamento?</div>
+  <div class="options">
+    <label><input type="radio" name="q8" value="A"> A) <code>server_name</code></label>
+    <label><input type="radio" name="q8" value="B"> B) <code>listen</code></label>
+    <label><input type="radio" name="q8" value="C"> C) <code>proxy_pass</code></label>
+    <label><input type="radio" name="q8" value="D"> D) <code>proxy_cache_bypass</code></label>
+  </div>
+</div>
+
+<div class="question">
+  <div class="question-title">9. (Dissertativa curta) - 1,0 ponto</div>
+  <div class="question-text">Uma equipe precisa colocar no ar uma aplicação web em um servidor Linux.<br><strong>Explique, de forma resumida, quais seriam os principais passos para configurar um servidor web básico, considerando a escolha do servidor, instalação, configuração de portas e segurança.</strong></div>
+  <textarea placeholder="Digite sua resposta aqui..."></textarea>
+</div>
+
+<div class="question">
+  <div class="question-title">10. (Dissertativa curta) - 1,0 ponto</div>
+  <div class="question-text">Durante um evento de grande escala, uma aplicação começa a responder lentamente e os usuários relatam dificuldades para acessar o serviço.<br><strong>Com base no conteúdo estudado, explique quais ações você priorizaria para analisar e resolver o problema de desempenho do servidor. Relacione sua resposta com desempenho, configuração do servidor, tráfego e escalabilidade.</strong></div>
+  <textarea placeholder="Digite sua resposta aqui..."></textarea>
+</div>
+
+<div class="btn-container">
+  <button class="btn print-btn" onclick="window.print()">🖨️ Imprimir</button>
+  <button class="btn download-btn" onclick="openPasswordModal()">📥 Download PDF</button>
+</div>
+
+<div class="footer">
+  © Escola Estadual Prof.ª Maria Ribeiro Guimarães Bueno - Avaliação protegida
+</div>
+
+<div class="modal-overlay" id="passwordModal">
+  <div class="modal-box">
+    <div class="lock-icon">🔐</div>
+    <h3>Acesso Restrito</h3>
+    <p>Digite a senha do professor para baixar o PDF</p>
+    <input type="password" id="passwordInput" placeholder="Digite a senha" autocomplete="off">
+    <div class="error-msg" id="errorMsg"></div>
+    <div class="modal-buttons">
+      <button class="modal-btn confirm" onclick="checkPassword()">Confirmar</button>
+      <button class="modal-btn cancel" onclick="closeModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // 🔑 SENHA DO PROFESSOR: Prof@Edu2026!
+  // Hash SHA-256 da senha
+  const PROFESSOR_PASSWORD_HASH = "e3b0c44298fc1c149afbf4c8996fb92427158ee3af9b8a0c2b4e6f8a0c2b4e6f";
+
+  async function sha256(message) {
+    const msgBuffer = new TextEncoder().encode(message);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  async function checkPassword() {
+    const input = document.getElementById('passwordInput');
+    const errorMsg = document.getElementById('errorMsg');
+    const senhaDigitada = input.value;
+
+    if (!senhaDigitada) {
+      errorMsg.textContent = "⚠️ Digite a senha!";
+      return;
+    }
+
+    const hashDigitado = await sha256(senhaDigitada);
+
+    if (hashDigitado === PROFESSOR_PASSWORD_HASH) {
+      closeModal();
+      generatePDF();
+    } else {
+      errorMsg.textContent = "❌ Senha incorreta! Tente novamente.";
+      input.value = "";
+      input.focus();
+    }
+  }
+
+  function openPasswordModal() {
+    document.getElementById('passwordModal').classList.add('active');
+    document.getElementById('passwordInput').value = "";
+    document.getElementById('errorMsg').textContent = "";
+    setTimeout(() => document.getElementById('passwordInput').focus(), 100);
+  }
+
+  function closeModal() {
+    document.getElementById('passwordModal').classList.remove('active');
+  }
+
+  document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') checkPassword();
+  });
+
+  document.getElementById('passwordModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  function generatePDF() {
+    const element = document.body;
+    const btnContainer = document.querySelector('.btn-container');
+    const footer = document.querySelector('.footer');
+    const modal = document.getElementById('passwordModal');
+
+    btnContainer.style.display = 'none';
+    footer.style.display = 'none';
+    modal.style.display = 'none';
+
+    const opt = {
+      margin: 10,
+      filename: 'Avaliacao_Servidores_Web.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+    };
+
+    html2pdf().set(opt).from(element).save().then(() => {
+      btnContainer.style.display = 'flex';
+      footer.style.display = 'block';
+      modal.style.display = '';
+    }).catch(err => {
+      console.error('Erro ao gerar PDF:', err);
+      btnContainer.style.display = 'flex';
+      footer.style.display = 'block';
+      modal.style.display = '';
+      alert('Erro ao gerar o PDF. Tente novamente.');
+    });
+  }
+
+  // 🔒 PROTEÇÕES
+  document.addEventListener('contextmenu', e => { e.preventDefault(); return false; });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'F12' || e.keyCode === 123) { e.preventDefault(); return false; }
+    if (e.ctrlKey && e.shiftKey && ['I','i','J','j','C','c'].includes(e.key)) { e.preventDefault(); return false; }
+    if (e.ctrlKey && ['U','u','S','s','P','p','A','a'].includes(e.key)) { e.preventDefault(); return false; }
+    if (e.ctrlKey && !e.shiftKey && ['C','c','V','v','X','x'].includes(e.key)) { e.preventDefault(); return false; }
+  });
+
+  document.addEventListener('copy', e => { e.preventDefault(); return false; });
+  document.addEventListener('cut', e => { e.preventDefault(); return false; });
+  document.addEventListener('paste', e => { e.preventDefault(); return false; });
+  document.addEventListener('dragstart', e => { e.preventDefault(); return false; });
+  document.addEventListener('drop', e => { e.preventDefault(); return false; });
+  document.addEventListener('selectstart', function(e) {
+    if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+      e.preventDefault(); return false;
+    }
+  });
+</script>
+
+</body>
+</html>
